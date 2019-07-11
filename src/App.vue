@@ -4,7 +4,8 @@
     <el-alert
     title="成功提示的文案"
     type="success">
-  </el-alert>
+    </el-alert>
+    <router-view></router-view>
   </div>
 </template>
 
