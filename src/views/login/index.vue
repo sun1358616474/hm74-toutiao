@@ -65,6 +65,7 @@ export default {
               // res是响应对象 包含 后台返回的数据 res.data
               // 1 跳转到首页
               // 2 保存用户的信息 用来判断登录的状态  未完成
+              window.sessionStorage.setItem('hm74-toutiao', JSON.stringify(res.data.data))
               this.$router.push('/')
             })
             .catch(() => {

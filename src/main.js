@@ -6,7 +6,8 @@ import 'element-ui/lib/theme-chalk/index.css'
 // 导入vue-router
 import router from '@/router'
 // 导入axios
-import axios from 'axios'
+import axios from '@/api/axios.js'
+
 Vue.prototype.axios = axios
 Vue.use(ElementUI)
 Vue.config.productionTip = false

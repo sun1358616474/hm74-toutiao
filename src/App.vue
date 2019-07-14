@@ -10,7 +10,6 @@ export default {
   name: 'app'
 }
 </script>
-
 <style lang="less">
 
 </style>
