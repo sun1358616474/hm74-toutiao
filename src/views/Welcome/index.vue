@@ -5,14 +5,7 @@
 </template>
 
 <script>
-export default {
-  created () {
-    console.log(window)
-    this.axios
-      .get('articles')
-      .then(res => console.log(res))
-  }
-}
+export default {}
 </script>
 
 <style scoped lang='less'>

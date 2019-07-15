@@ -12,10 +12,10 @@
           <el-button style="float:right" type="primary">发送验证码</el-button>
         </el-form-item>
         <el-form-item>
-          <el-checkbox :value='true'>我已阅读并同意用户协议和隐私条款</el-checkbox>
+          <el-checkbox :value="true">我已阅读并同意用户协议和隐私条款</el-checkbox>
         </el-form-item>
         <el-form-item>
-          <el-button style="width:100%" type="primary" @click="login()">登  录</el-button>
+          <el-button style="width:100%" type="primary" @click="login()">登 录</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -56,22 +56,17 @@ export default {
   methods: {
     login () {
       // 对整个表单进行效验
-      this.$refs.loginForm.validate(valid => {
+      this.$refs.loginForm.validate(async valid => {
         if (valid) {
-          // 提交登录请求 axios是基于primise封装的post（）返回值一个promise对象
-          this.axios
-            .post('authorizations', this.loginForm)
-            .then(res => {
-              // res是响应对象 包含 后台返回的数据 res.data
-              // 1 跳转到首页
-              // 2 保存用户的信息 用来判断登录的状态  未完成
-              window.sessionStorage.setItem('hm74-toutiao', JSON.stringify(res.data.data))
-              this.$router.push('/')
-            })
-            .catch(() => {
-              // 提示
-              this.$message.error('手机或者验证码错误')
-            })
+          // 发送 promise对象 给你发请求
+          // try{业务逻辑}catch（err）{处理错误}
+          try {
+            const res = await this.axios.post('authorizations', this.loginForm)
+            window.sessionStorage.setItem('hm74-toutiao', JSON.stringify(res.data.data))
+            this.$router.push('/')
+          } catch (err) {
+            this.$message.error('手机号或验证码错误')
+          }
         }
       })
     }
