@@ -43,12 +43,15 @@
       </el-form>
     </el-card>
     <el-card>
+      <my-test></my-test>
     </el-card>
   </div>
 </template>
 
 <script>
+import MyTest from '@/components/my-test.vue'
 export default {
+  components: { MyTest },
   data () {
     return {
       // 提交后的筛选条件数据
@@ -74,7 +77,7 @@ export default {
 .el-card {
   margin-bottom: 20px;
 }
-.article-container{
-    padding: 10px;
+.article-container {
+  padding: 10px;
 }
 </style>
