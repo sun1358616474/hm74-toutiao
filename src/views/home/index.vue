@@ -58,7 +58,9 @@
           </el-dropdown-menu>
         </el-dropdown>
       </el-header>
-      <router-view></router-view>
+      <el-main class="my-min">
+        <router-view></router-view>
+      </el-main>
     </el-container>
   </el-container>
 </template>

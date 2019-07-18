@@ -27,6 +27,8 @@
         </el-form-item>
         <el-form-item label="时间 :">
           <el-date-picker
+            value-format="yyyy-MM-dd"
+            @change="changeDate"
             v-model="dateValues"
             type="daterange"
             range-separator="至"
@@ -35,7 +37,7 @@
           ></el-date-picker>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary">筛选</el-button>
+          <el-button type="primary" @click="search()">筛选</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -43,19 +45,19 @@
     <el-card>
       <div slot="header">
         根据筛选条件共查询到
-        <b>0</b>条结果：
+        <b>{{total}}</b> 条结果：
       </div>
       <el-table :data="articles">
         <el-table-column label="封面">
           <template slot-scope="scope">
-            <el-image :src="scope.row.cover.images[0]" style="width:100px,height:75px">
+            <el-image :src="scope.row.cover.images[0]" style="width:100px;height:75px;">
               <div slot="error">
                 <img src="../../assets/images/error.gif" width="100" height="75" alt />
               </div>
             </el-image>
           </template>
         </el-table-column>
-        <el-table-column label="标签" prop="title"></el-table-column>
+        <el-table-column label="标题" prop="title"></el-table-column>
         <el-table-column label="状态">
           <template slot-scope="scope">
             <el-tag v-if="scope.row.status === 0" type="info">草稿</el-tag>
@@ -67,25 +69,36 @@
         </el-table-column>
         <el-table-column label="发布时间" prop="pubdate"></el-table-column>
         <el-table-column label="操作" width="120">
-          <template slot-scope>
-            <el-button icon="el-icon-edit" plain type="primary" circle></el-button>
-            <el-button icon="el-icon-delete" plain type="danger" circle></el-button>
+          <template slot-scope="scope">
+            <el-button @click="edit(scope.row.id)" icon="el-icon-edit" plain type="primary" circle></el-button>
+            <el-button @click="del(scope.row.id)" icon="el-icon-delete" plain type="danger" circle></el-button>
           </template>
         </el-table-column>
       </el-table>
       <div class="box">
-        <el-pagination background layout="prev,pager,next" :total="1000"></el-pagination>
+        <el-pagination
+          background
+          layout="prev, pager, next"
+          @current-change="pager"
+          :current-page="reqParams.page"
+          :page-size="reqParams.per_page"
+          :total="total"
+        ></el-pagination>
       </div>
     </el-card>
   </div>
 </template>
 
 <script>
+// eslint-disable-next-line no-unused-vars
+import { async } from 'q'
 export default {
   data () {
     return {
       // 提交后的筛选条件数据
       reqParams: {
+        page: 1,
+        per_page: 20,
         // 默认数据''与null区别
         // 如果是null该字段是不会提交给后台的
         status: null,
@@ -98,7 +111,9 @@ export default {
       // 日期数据
       dateValues: [],
       // 文章列表数据
-      articles: []
+      articles: [],
+      // 总条数
+      total: 0
     }
   },
   created () {
@@ -108,6 +123,41 @@ export default {
     this.getArticles()
   },
   methods: {
+    // 编辑
+    edit (id) {
+      this.$router.push(`/publish${id}`)
+    },
+    // 删除
+    del (id) {
+      this.$confirm('亲，次操作将永久删除该文章，是否继续？', '温馨提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(async () => {
+        await this.axios.delete(`articles/${id}`)
+        // 删除成功
+        this.$message.success('删除成功')
+        this.getArticles().catch(() => {})
+      })
+    },
+    // 分页
+    pager (newPage) {
+      // 提交当前页码给后台 才能获取对应的数据
+      this.reqParams.page = newPage
+      this.getArticles()
+    },
+    // 搜索
+    search () {
+      this.reqParams.page = 1
+      this.getArticles()
+    },
+    // 选择时间处理函数
+    changeDate (value) {
+      // eslint-disable-next-line no-undef
+      this.reqParams.begin_pubdate = values[0]
+      // eslint-disable-next-line no-undef
+      this.reqParams.end_pubdate = values[1]
+    },
     // 获取频道数据
     async getChannelOptions () {
       // res ===> {data：响应内容} ===> {data:{data:{channels:[{id.name}],...}}}
@@ -126,6 +176,8 @@ export default {
         data: { data }
       } = await this.axios.get('articles', { params: this.reqParams })
       this.articles = data.results
+      // 获取总条数
+      this.total = data.total_count
     }
   }
 }
@@ -136,10 +188,7 @@ export default {
 .el-card {
   margin-bottom: 20px;
 }
-.article-container {
-  padding: 10px;
-}
-.box{
+.box {
   text-align: center;
   margin-top: 20px;
 }
