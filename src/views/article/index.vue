@@ -142,11 +142,14 @@ export default {
       this.getArticles()
     },
     // 选择时间处理函数
-    changeDate (value) {
-      // eslint-disable-next-line no-undef
-      this.reqParams.begin_pubdate = values[0]
-      // eslint-disable-next-line no-undef
-      this.reqParams.end_pubdate = values[1]
+    changeDate (values) {
+      if (values) {
+        this.reqParams.begin_pubdate = values[0]
+        this.reqParams.end_pubdate = values[1]
+      } else {
+        this.reqParams.begin_pubdate = null
+        this.reqParams.end_pubdate = null
+      }
     },
     // 获取文件列表数据
     async getArticles () {
