@@ -1,6 +1,5 @@
 <template>
   <div class="article-container">
-    <my-channel @input="fn"></my-channel>
     <!-- 筛选区域 -->
     <el-card>
       <div slot="header">
@@ -17,14 +16,8 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="频道 :">
-          <el-select v-model="reqParams.channel_id" placeholder="所有频道">
-            <el-option
-              v-for="item in channelOptions"
-              :key="item.id"
-              :label="item.name"
-              :value="item.id"
-            ></el-option>
-          </el-select>
+          <!-- :value="reqParams.channel_id" @input="把改变的数据设置给reqParams.channel_id" -->
+          <my-channel v-model="reqParams.channel_id"></my-channel>
         </el-form-item>
         <el-form-item label="时间 :">
           <el-date-picker
@@ -107,8 +100,6 @@ export default {
         begin_pubdate: null,
         end_pubdate: null
       },
-      // 频道的选项数组
-      channelOptions: [{ name: 'java', id: 1 }],
       // 日期数据
       dateValues: [],
       // 文章列表数据
@@ -118,16 +109,10 @@ export default {
     }
   },
   created () {
-    // 获取频道数据
-    this.getChannelOptions()
     // 获取文件列表数据
     this.getArticles()
   },
   methods: {
-    fn (data) {
-      console.log('fn')
-      console.log(data)
-    },
     // 编辑
     edit (id) {
       this.$router.push(`/publish${id}`)
@@ -162,16 +147,6 @@ export default {
       this.reqParams.begin_pubdate = values[0]
       // eslint-disable-next-line no-undef
       this.reqParams.end_pubdate = values[1]
-    },
-    // 获取频道数据
-    async getChannelOptions () {
-      // res ===> {data：响应内容} ===> {data:{data:{channels:[{id.name}],...}}}
-      // 解构赋值 -层 const {data} = res
-      // 解构赋值 二层 const {data:{data:data}} = res
-      const {
-        data: { data }
-      } = await this.axios.get('channels')
-      this.channelOptions = data.channels
     },
     // 获取文件列表数据
     async getArticles () {
