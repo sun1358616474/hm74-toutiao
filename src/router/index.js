@@ -13,6 +13,8 @@ import Article from '@/views/article'
 import NotFound from '@/views/404'
 // 导入素材管理页面
 import Image from '@/views/image'
+// 导入发布文章页面
+import Publish from '@/views/publish'
 Vue.use(VueRouter)
 
 const router = new VueRouter({
@@ -24,7 +26,8 @@ const router = new VueRouter({
       children: [
         { name: 'welcome', path: '/', component: Welcome },
         { name: 'article', path: '/article', component: Article },
-        { name: 'image', path: '/image', component: Image }
+        { name: 'image', path: '/image', component: Image },
+        { name: 'publish', path: '/publish', component: Publish }
       ]
     },
     { name: '404', path: '*', component: NotFound }
