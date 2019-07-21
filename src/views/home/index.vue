@@ -66,6 +66,7 @@
 </template>
 
 <script>
+import eventBus from '@/eventBus'
 export default {
   data () {
     return {
@@ -78,6 +79,12 @@ export default {
     const user = JSON.parse(window.sessionStorage.getItem('hm74-toutiao'))
     this.avatar = user.photo
     this.name = user.name
+    eventBus.$on('updateHeaderName', (name) => {
+      this.name = name
+    })
+    eventBus.$on('updataHeaderPhoto', (url) => {
+      this.avatar = url
+    })
   },
   methods: {
     toggleMenu () {

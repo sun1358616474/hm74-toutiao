@@ -15,7 +15,10 @@ import NotFound from '@/views/404'
 import Image from '@/views/image'
 // 导入发布文章页面
 import Publish from '@/views/publish'
+// 导入评论管理页面
 import Comment from '@/views/comment'
+// 导入个人设置页面
+import Setting from '@/views/setting'
 Vue.use(VueRouter)
 
 const router = new VueRouter({
@@ -29,7 +32,8 @@ const router = new VueRouter({
         { name: 'article', path: '/article', component: Article },
         { name: 'image', path: '/image', component: Image },
         { name: 'publish', path: '/publish', component: Publish },
-        { name: 'comment', path: '/comment', component: Comment }
+        { name: 'comment', path: '/comment', component: Comment },
+        { name: 'setting', path: '/setting', component: Setting }
       ]
     },
     { name: '404', path: '*', component: NotFound }
